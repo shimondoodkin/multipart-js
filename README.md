@@ -6,6 +6,8 @@ A JavaScript library for parsing and writing multipart messages.
 
 Pre-pre-alpha.  Almost nothing is here, and what is here is likely completely broken.
 
+Notably, the unit tests for the writer are broken.
+
 ## Usage
 
 If you're familiar with [sax-js](http://github.com/isaacs/sax-js), then most of this should
@@ -19,9 +21,15 @@ done.  Please keep fingers and dangling clothing away from the state machine.
     
     // in all event handlers, "this" is the parser, and "this.part" is the
     // part that's currently being dealt with.
-    parser.onpartbegin = function (part) { doSomething(part) };
-    parser.ondata = function (chunk) { doSomethingElse(chunk) };
-    parser.onend = function () { closeItUp() };
+    parser.addListener("onPartBegin", function(part) {
+      doSomething(part)
+    });
+    parser.addListener("onData", function(chunk) {
+      doSomethingElse(chunk)
+    });
+    parser.addListener("onEnd", function() {
+      closeItUp()
+    });
     
     // now start feeding the message through it.
     // you can do this all in one go, if you like, or one byte at a time,
@@ -38,8 +46,12 @@ done.  Please keep fingers and dangling clothing away from the state machine.
     var writer = multipart.writer();
     
     // attach event handlers for the things we care about.
-    writer.ondata = function (chunk) { doSomething(chunk) };
-    writer.onend = function () { closeItUp() };
+    writer.addListener("onData", function(chunk) {
+      doSomething(chunk)
+    });
+    writer.addListener("onEnd", function() {
+      closeItUp()
+    });
     
     // now trigger the events to fire by feeding files through it.
     writer.boundary = "foo";
