@@ -24,38 +24,38 @@ errorHandlerCalled = false;
 errorMessage = "";
 lastChunk = "";
 
-writer.onError = function  (err) {
+writer.addListener("onError", function(err) {
 	assert.notEqual(err.message, undefined, "should pass Error object to onError handler");
 	errorMessage = err.message;
 	output("emitted error: " + errorMessage);
 	errorHandlerCalled = true;
-}
+});
 
-writer.onData = function  (chunk) {
+writer.addListener("onData", function(chunk) {
 	lastChunk = chunk
 	output("emitted data: " + lastChunk);
 	parser.write(chunk);
-}
+});
 
-writer.onEnd = function () {
+writer.addListener("onEnd", function() {
   output("ended");
-}
+});
 
-parser.onError = function (error) {
+parser.addListener("onError", function(error) {
   assert.ok("false", "parser encounted error: " + error.message)
-}
+});
 
-parser.onPartBegin = function (part) {
+parser.addListener("onPartBegin", function(part) {
   sys.debug("parser started part successfully " + sys.inspect(part.headers));
-}
+});
 
-parser.onPartEnd = function (part) {
+parser.addListener("onPartEnd", function(part) {
   sys.debug("parser ended part succesfully");
-}
+});
 
-parser.onEnd = function () {
+parser.addListener("onEnd", function() {
   sys.debug("parser ended");
-}
+});
 
 parser.headers = aSimpleMessage.headers;
 
@@ -108,13 +108,13 @@ function testPart(expect, part) {
      }
 }
 
-parser.onPartBegin = function (part) {
+parser.addListener('onPartBegin', function(part) {
   testPart(expect[e++], part);
-}
+});
 
-writer.onData = function (chunk) {
+writer.addListener('onData', function(chunk) {
   parser.write(chunk);
-}
+});
  //a nested test from the fixtures
 
 var expect = aNestedMessage.expect

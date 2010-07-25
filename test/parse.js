@@ -19,9 +19,9 @@ var multipart = require("../lib/multipart")
   , e
   ;
 
-p.onPartBegin = function (part) {
+p.addListener('onPartBegin', function (part) {
   testPart(expect[e++], part);
-}
+});
 
 for (var i = 0, l = messages.length; i < l; i ++) {
   var message = messages[i]
